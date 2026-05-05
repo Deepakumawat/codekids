@@ -1,7 +1,6 @@
 ﻿from ai_client import client as _fallback_client
 """Multi-agent system for CodeKids - code teaching coordination"""
 import os
-from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,7 +9,7 @@ class Agent:
     def __init__(self, role: str, goal: str):
         self.role = role
         self.goal = goal
-        self.client = _fallback_client)
+        self.client = _fallback_client
 
     def execute(self, task: str) -> str:
         response = self.client.chat.completions.create(
