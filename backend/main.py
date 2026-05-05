@@ -1,3 +1,4 @@
+﻿from ai_client import client as _fallback_client
 """
 CodeKids Backend - AI-Powered Code Editor for K-12 Students
 FastAPI + OpenAI + Local Python Execution
@@ -118,9 +119,9 @@ def call_ai(user_prompt: str, history: list = None, system: str = None) -> str:
     messages.append({"role": "user", "content": user_prompt})
     try:
         from openai import OpenAI
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client = _fallback_client)
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama-3.3-70b-versatile",
             messages=messages,
             max_tokens=2000,
             temperature=0.7,

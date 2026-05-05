@@ -1,3 +1,4 @@
+﻿from ai_client import client as _fallback_client
 """
 NLP Engine for ClassroomAI - Shared across all projects
 Features:
@@ -12,8 +13,8 @@ from openai import OpenAI
 
 class NLPEngine:
     def __init__(self):
-        self.client = OpenAI()
-        self.model = "gpt-4o-mini"
+        self.client = _fallback_client, base_url="https://api.groq.com/openai/v1")
+        self.model = "llama-3.3-70b-versatile"
 
     def analyze_question(self, question: str, context: str = "") -> dict:
         """

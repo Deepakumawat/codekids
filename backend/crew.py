@@ -1,3 +1,4 @@
+﻿from ai_client import client as _fallback_client
 """Multi-agent system for CodeKids - code teaching coordination"""
 import os
 from openai import OpenAI
@@ -9,11 +10,11 @@ class Agent:
     def __init__(self, role: str, goal: str):
         self.role = role
         self.goal = goal
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.client = _fallback_client)
 
     def execute(self, task: str) -> str:
         response = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": f"You are a {self.role}. Goal: {self.goal}"},
                 {"role": "user", "content": task}
