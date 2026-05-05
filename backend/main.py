@@ -118,8 +118,7 @@ def call_ai(user_prompt: str, history: list = None, system: str = None) -> str:
         messages.extend(history[-6:])  # keep last 3 exchanges to avoid token overflow
     messages.append({"role": "user", "content": user_prompt})
     try:
-        from openai import OpenAI
-        client = _fallback_client)
+        client = _fallback_client
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=messages,
