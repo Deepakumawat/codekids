@@ -158,8 +158,12 @@ async def health():
     }
 
 @app.post("/api/run")
-async def run_code(request: RunCodeRequest):
-    """Execute code - if compiler unavailable, offer AI help instead"""
+def run_code(request: RunCodeRequest):
+    """Execute code - if compiler unavailable, offer AI help instead.
+
+    Plain `def` (not async) so FastAPI runs it in a worker thread: compiling and
+    running can take many seconds and must not block every other request.
+    """
     result = execute_code(request.code, request.language)
 
     # If compiler not available, suggest AI tools
@@ -741,7 +745,7 @@ async def classify_question(request: NLPAnalysisRequest):
 
 # ─── SERVE FRONTEND ────────────────────────────────────
 
-FRONTEND_DIST = Path(__file__).parent.parent / "frontend" / "dist"
+FRONTEND_DIST = (Path(__file__).parent.parent / "frontend" / "dist").resolve()
 
 if FRONTEND_DIST.exists():
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="assets")
@@ -759,8 +763,10 @@ def serve_index():
 def serve_frontend(full_path: str):
     if full_path.startswith("api/"):
         return {"error": "Not found"}
-    file_path = FRONTEND_DIST / full_path
-    if file_path.exists():
+    # Resolve and require the file to stay inside dist/, so "../" in the URL
+    # can't be used to read the backend code, the database, or /proc/*/environ.
+    file_path = (FRONTEND_DIST / full_path).resolve()
+    if file_path.is_file() and file_path.is_relative_to(FRONTEND_DIST):
         return FileResponse(file_path)
     index_file = FRONTEND_DIST / "index.html"
     if index_file.exists():
