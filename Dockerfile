@@ -30,4 +30,8 @@ RUN cd frontend && npm run build
 
 COPY backend/ ./backend/
 
+# Student code runs as this unprivileged user (see backend/compilers.py).
+# Lock the backend folder (code, database) so only the server (root) can read it.
+RUN useradd --system --no-create-home --shell /usr/sbin/nologin runner && chmod -R go-rwx /app/backend
+
 CMD sh -c "cd /app/backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
