@@ -5,6 +5,8 @@ services:
     region: oregon
     plan: free
     envVars:
+      - key: GROQ_REASONING_EFFORT
+        value: "low"
       - key: GROQ_MODEL
         value: "openai/gpt-oss-120b"
       - key: GROQ_FALLBACK_MODEL
